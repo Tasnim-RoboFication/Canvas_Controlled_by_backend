@@ -1,0 +1,161 @@
+/* Global styles for Canvas 2 application */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background: #f8fafc;
+}
+
+/* React Flow specific styles */
+.react-flow__node {
+  font-size: 12px;
+}
+
+.react-flow__handle {
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border: 2px solid #ffffff;
+}
+
+.react-flow__handle.connectingfrom {
+  background: #10b981;
+}
+
+.react-flow__handle.connectingto {
+  background: #f59e0b;
+}
+
+/* Custom node styles */
+.custom-node {
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.custom-node:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.custom-node.selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Node anchor points */
+.node-anchor {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #3b82f6;
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: crosshair;
+  z-index: 10;
+}
+
+.node-anchor:hover {
+  background: #2563eb;
+  transform: scale(1.2);
+}
+
+.node-anchor.top {
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.node-anchor.bottom {
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Controls panel */
+.controls-panel {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.controls-panel h3 {
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #374151;
+}
+
+.controls-panel button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.controls-panel button:hover {
+  background: #2563eb;
+}
+
+.controls-panel button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Status indicator */
+.status-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+}
+
+.status-indicator.connected {
+  border-left: 4px solid #10b981;
+}
+
+.status-indicator.disconnected {
+  border-left: 4px solid #ef4444;
+}
+
+/* Custom edge styles */
+.react-flow__edge-path {
+  stroke: #6366f1;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #4f46e5;
+  stroke-width: 3;
+}
