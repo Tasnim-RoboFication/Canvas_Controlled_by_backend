@@ -23,6 +23,7 @@ import ReactFlow, {
   OnEdgesChange,
   OnConnect,
   ReactFlowInstance,
+  NodePositionChange,
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -198,7 +199,7 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
     // Check if any node moved
     const movedNodes = changes.filter(change => 
       change.type === 'position' && change.dragging === false
-    );
+    ) as NodePositionChange[];
 
     if (movedNodes.length > 0) {
       // Update all edges connected to moved nodes
