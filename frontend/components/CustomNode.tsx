@@ -29,6 +29,16 @@ const CustomNode = memo(({ data, selected }: NodeProps<CustomNodeData>) => {
         className="node-anchor top"
         onMouseDown={(e) => handleAnchorMouseDown(e, 'top')}
       />
+      <Handle
+        type="target"
+        position={Position.Top}
+        id="top-target"  // Unique ID for target
+        className="node-anchor top"
+        style={{ 
+          opacity: 0,
+          pointerEvents: 'none'
+        }}
+      />
       
       {/* Node content */}
       <div className="node-content">
@@ -43,19 +53,15 @@ const CustomNode = memo(({ data, selected }: NodeProps<CustomNodeData>) => {
         className="node-anchor bottom"
         onMouseDown={(e) => handleAnchorMouseDown(e, 'bottom')}
       />
-      
-      {/* Also add target handles for receiving connections */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        id="top-target"
-        style={{ opacity: 0 }}
-      />
       <Handle
         type="target"
         position={Position.Bottom}
-        id="bottom-target"
-        style={{ opacity: 0 }}
+        id="bottom-target"  // Unique ID for target
+        className="node-anchor bottom"
+        style={{ 
+          opacity: 0,
+          pointerEvents: 'none'
+        }}
       />
     </div>
   );

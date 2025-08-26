@@ -143,6 +143,13 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
    * Handle new edge connections
    */
   const onConnect: OnConnect = useCallback((connection: Connection) => {
+    console.log('🔗 Connection:', {
+      source: connection.source,
+      sourceHandle: connection.sourceHandle,
+      target: connection.target,
+      targetHandle: connection.targetHandle
+    });
+
     const newEdge: Edge<CustomEdgeData> = {
       id: `edge-${Date.now()}`,
       source: connection.source!,
@@ -160,18 +167,21 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
     const targetNode = nodes.find(n => n.id === connection.target);
 
     if (sourceNode && targetNode) {
-      // Calculate anchor point positions
+      // Calculate source anchor position
       const sourceY = connection.sourceHandle === 'top' 
         ? sourceNode.position.y 
-        : sourceNode.position.y + 60; // Assume node height is 60px
+        : sourceNode.position.y + 60;
       
+      // Calculate target anchor position
       const targetY = connection.targetHandle === 'top-target' 
         ? targetNode.position.y 
-        : targetNode.position.y + 60;
+        : connection.targetHandle === 'bottom-target'
+          ? targetNode.position.y + 60
+          : targetNode.position.y + 60; // Default to bottom
 
       updateEdgeWithBackendPath(
         newEdge.id,
-        sourceNode.position.x + 60, // Assume node width is 120px, center is at +60
+        sourceNode.position.x + 60,
         sourceY,
         targetNode.position.x + 60,
         targetY
@@ -203,13 +213,17 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
           const targetNode = nodes.find(n => n.id === edge.target);
 
           if (sourceNode && targetNode) {
+            // Calculate source anchor position
             const sourceY = edge.sourceHandle === 'top' 
               ? sourceNode.position.y 
               : sourceNode.position.y + 60;
             
+            // Calculate target anchor position
             const targetY = edge.targetHandle === 'top-target' 
               ? targetNode.position.y 
-              : targetNode.position.y + 60;
+              : edge.targetHandle === 'bottom-target'
+                ? targetNode.position.y + 60
+                : targetNode.position.y + 60; // Default to bottom
 
             updateEdgeWithBackendPath(
               edge.id,
