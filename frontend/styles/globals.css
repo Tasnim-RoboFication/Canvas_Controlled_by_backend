@@ -132,13 +132,14 @@ body {
 /* Status indicator */
 .status-indicator {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
   background: white;
   padding: 12px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-size: 14px;
+  z-index: 1000;
 }
 
 .status-indicator.connected {
