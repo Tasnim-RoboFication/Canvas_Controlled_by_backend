@@ -4,7 +4,7 @@
  */
 
 import React, { memo } from 'react';
-import { EdgeProps, getSmoothStepPath } from 'reactflow';
+import { EdgeProps } from 'reactflow';
 
 export interface CustomEdgeData {
   svgPath?: string;
@@ -17,21 +17,17 @@ const CustomEdge = memo(({
   sourceY,
   targetX,
   targetY,
-  sourcePosition,
-  targetPosition,
   style = {},
   data,
   selected,
 }: EdgeProps<CustomEdgeData>) => {
-  // Use backend-computed path if available, otherwise fall back to default
-  const edgePath = data?.svgPath || getSmoothStepPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-  })[0];
+  // Only use backend-computed path - no fallback
+  const edgePath = data?.svgPath;
+
+  // Don't render anything if no backend path is available
+  if (!edgePath) {
+    return null;
+  }
 
   return (
     <>
