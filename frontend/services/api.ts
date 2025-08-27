@@ -4,6 +4,7 @@
  */
 
 import axios from 'axios';
+import { EdgePathRequest, EdgePathResponse } from '../types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -14,25 +15,6 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-export interface EdgePathRequest {
-  source_x: number;
-  source_y: number;
-  target_x: number;
-  target_y: number;
-  edge_type?: 'bezier' | 'straight' ;
-}
-
-export interface EdgePathResponse {
-  path: string;
-  source: { x: number; y: number };
-  target: { x: number; y: number };
-}
-
-export interface ApiError {
-  message: string;
-  status?: number;
-}
 
 /**
  * Request edge path computation from the backend

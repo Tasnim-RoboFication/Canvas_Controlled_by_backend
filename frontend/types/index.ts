@@ -17,11 +17,15 @@ export interface CustomEdgeData {
 export type CustomNode = Node<CustomNodeData>;
 export type CustomEdge = Edge<CustomEdgeData>;
 
+// Centralized API types
+export type EdgeType = 'bezier' | 'straight' | 'step' | 'smoothstep';
+
 export interface EdgePathRequest {
   source_x: number;
   source_y: number;
   target_x: number;
   target_y: number;
+  edge_type: EdgeType;
 }
 
 export interface EdgePathResponse {

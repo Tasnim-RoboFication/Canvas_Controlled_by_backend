@@ -87,6 +87,75 @@ def calculate_bezier_path(source_x: float, source_y: float, target_x: float, tar
     
     return path
 
+def calculate_step_path(source_x: float, source_y: float, target_x: float, target_y: float) -> str:
+    """
+    Calculate step path (right-angle connection) between two points
+    Creates a path with sharp right-angle turns
+    
+    Args:
+        source_x, source_y: Starting point coordinates
+        target_x, target_y: Ending point coordinates
+        
+    Returns:
+        SVG path string for step connection
+    """
+    # Calculate midpoint for the step
+    mid_x = source_x + (target_x - source_x) * 0.5
+    
+    # Create step path: horizontal first, then vertical
+    path = f"M {source_x},{source_y} L {mid_x},{source_y} L {mid_x},{target_y} L {target_x},{target_y}"
+    
+    return path
+
+def calculate_smoothstep_path(source_x: float, source_y: float, target_x: float, target_y: float) -> str:
+    """
+    Calculate smooth step path (rounded right-angle connection) between two points
+    Creates a path with rounded corners at the turns
+    
+    Args:
+        source_x, source_y: Starting point coordinates
+        target_x, target_y: Ending point coordinates
+        
+    Returns:
+        SVG path string for smooth step connection
+    """
+    # Calculate midpoint for the step
+    mid_x = source_x + (target_x - source_x) * 0.5
+    
+    # Corner radius for smooth transitions
+    corner_radius = min(20, abs(target_x - source_x) * 0.1, abs(target_y - source_y) * 0.1)
+    
+    # Determine the direction of the path
+    dx = target_x - source_x
+    dy = target_y - source_y
+    
+    # Calculate corner points
+    if dx != 0 and dy != 0:
+        # First corner (horizontal to vertical transition)
+        corner1_x = mid_x - (corner_radius if dx > 0 else -corner_radius)
+        corner1_y = source_y
+        corner1_end_x = mid_x
+        corner1_end_y = source_y + (corner_radius if dy > 0 else -corner_radius)
+        
+        # Second corner (vertical to horizontal transition)  
+        corner2_x = mid_x
+        corner2_y = target_y - (corner_radius if dy > 0 else -corner_radius)
+        corner2_end_x = mid_x + (corner_radius if dx > 0 else -corner_radius)
+        corner2_end_y = target_y
+        
+        # Create smooth step path with rounded corners
+        path = (f"M {source_x},{source_y} "
+                f"L {corner1_x},{corner1_y} "
+                f"Q {mid_x},{source_y} {corner1_end_x},{corner1_end_y} "
+                f"L {corner2_x},{corner2_y} "
+                f"Q {mid_x},{target_y} {corner2_end_x},{corner2_end_y} "
+                f"L {target_x},{target_y}")
+    else:
+        # Fallback to straight line if no turn needed
+        path = f"M {source_x},{source_y} L {target_x},{target_y}"
+    
+    return path
+
 def calculate_edge_path(source_x: float, source_y: float, target_x: float, target_y: float, edge_type: str) -> str:
     """
     Calculate edge path based on the specified edge type
@@ -94,13 +163,19 @@ def calculate_edge_path(source_x: float, source_y: float, target_x: float, targe
     Args:
         source_x, source_y: Starting point coordinates
         target_x, target_y: Ending point coordinates
-        edge_type: Type of edge ('bezier', 'straight', 'smooth', 'steep')
+        edge_type: Type of edge ('bezier', 'straight', 'step', 'smoothstep')
         
     Returns:
         SVG path string for the specified edge type
     """
+    edge_type = edge_type.lower()
+    
     if edge_type == "straight":
         return calculate_straight_path(source_x, source_y, target_x, target_y)
+    elif edge_type == "step":
+        return calculate_step_path(source_x, source_y, target_x, target_y)
+    elif edge_type == "smoothstep":
+        return calculate_smoothstep_path(source_x, source_y, target_x, target_y)
     else:  # Default to bezier
         return calculate_bezier_path(source_x, source_y, target_x, target_y)
 

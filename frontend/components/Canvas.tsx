@@ -29,10 +29,11 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import CustomNode, { CustomNodeData } from './CustomNode';
 import CustomEdge, { CustomEdgeData } from './CustomEdge';
-import { getEdgePath, checkApiHealth, EdgePathRequest } from '../services/api';
+import { getEdgePath, checkApiHealth } from '../services/api';
+import { EdgePathRequest } from '../types';
 
-// Edge type options
-export type EdgeType = 'bezier' | 'straight';
+// Edge type options - updated to include all types
+export type EdgeType = 'bezier' | 'straight' | 'step' | 'smoothstep';
 
 // Define node and edge types
 const nodeTypes: NodeTypes = {
@@ -319,6 +320,8 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
           >
             <option value="bezier">Bezier (Curved)</option>
             <option value="straight">Straight Line</option>
+            <option value="step">Step</option>
+            <option value="smoothstep">Smooth Step</option>
           </select>
         </div>
       </div>
