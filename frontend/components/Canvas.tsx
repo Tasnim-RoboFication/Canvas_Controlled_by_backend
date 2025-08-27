@@ -207,9 +207,9 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
   const handleNodesChange: OnNodesChange = useCallback((changes) => {
     onNodesChange(changes);
 
-    // Check if any node moved
+    // Check if any node moved (during dragging OR after dragging)
     const movedNodes = changes.filter(change => 
-      change.type === 'position' && change.dragging === false
+      change.type === 'position' // Remove the dragging === false condition
     ) as NodePositionChange[];
 
     if (movedNodes.length > 0) {
@@ -225,31 +225,39 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
           const targetNode = nodes.find(n => n.id === edge.target);
 
           if (sourceNode && targetNode) {
+            // Use the updated position from the change if it's the node being moved
+            const sourcePosition = change.id === edge.source && change.position 
+              ? change.position 
+              : sourceNode.position;
+            const targetPosition = change.id === edge.target && change.position 
+              ? change.position 
+              : targetNode.position;
+
             // Calculate source anchor position
             const sourceY = edge.sourceHandle === 'top' 
-              ? sourceNode.position.y 
-              : sourceNode.position.y + 60;
+              ? sourcePosition.y 
+              : sourcePosition.y + 60;
             
             // Calculate target anchor position
             const targetY = edge.targetHandle === 'top-target' 
-              ? targetNode.position.y 
+              ? targetPosition.y 
               : edge.targetHandle === 'bottom-target'
-                ? targetNode.position.y + 60
-                : targetNode.position.y + 60; // Default to bottom
+                ? targetPosition.y + 60
+                : targetPosition.y + 60; // Default to bottom
 
             updateEdgeWithBackendPath(
               edge.id,
-              sourceNode.position.x + 60,
+              sourcePosition.x + 60,
               sourceY,
-              targetNode.position.x + 60,
+              targetPosition.x + 60,
               targetY,
-              edge.data?.edgeType || 'bezier' // Use the edge's stored type, not the currently selected type
+              edge.data?.edgeType || 'bezier'
             );
           }
         });
       });
     }
-  }, [onNodesChange, edges, nodes, updateEdgeWithBackendPath]); // Remove selectedEdgeType from dependencies
+  }, [onNodesChange, edges, nodes, updateEdgeWithBackendPath]);
 
   /**
    * Add a new node to the canvas
