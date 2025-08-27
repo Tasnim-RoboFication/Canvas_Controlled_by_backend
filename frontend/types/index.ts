@@ -12,6 +12,7 @@ export interface CustomNodeData {
 export interface CustomEdgeData {
   svgPath?: string;
   isLoading?: boolean;
+  edgeType: EdgeType; // Add this to store the edge's original type
 }
 
 export type CustomNode = Node<CustomNodeData>;

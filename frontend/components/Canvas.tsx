@@ -165,7 +165,10 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
       sourceHandle: connection.sourceHandle,
       targetHandle: connection.targetHandle,
       type: 'custom',
-      data: { isLoading: true },
+      data: { 
+        isLoading: true,
+        edgeType: selectedEdgeType // Store the selected edge type with the edge
+      },
     };
 
     setEdges(edges => addEdge(newEdge, edges));
@@ -193,7 +196,7 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
         sourceY,
         targetNode.position.x + 60,
         targetY,
-        selectedEdgeType
+        selectedEdgeType // Use the currently selected type for new edges
       );
     }
   }, [nodes, setEdges, updateEdgeWithBackendPath, selectedEdgeType]);
@@ -240,13 +243,13 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
               sourceY,
               targetNode.position.x + 60,
               targetY,
-              selectedEdgeType
+              edge.data?.edgeType || 'bezier' // Use the edge's stored type, not the currently selected type
             );
           }
         });
       });
     }
-  }, [onNodesChange, edges, nodes, updateEdgeWithBackendPath, selectedEdgeType]);
+  }, [onNodesChange, edges, nodes, updateEdgeWithBackendPath]); // Remove selectedEdgeType from dependencies
 
   /**
    * Add a new node to the canvas
