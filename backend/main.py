@@ -26,12 +26,27 @@ class EdgePathRequest(BaseModel):
     source_y: float
     target_x: float
     target_y: float
+    edge_type: str
 
 class EdgePathResponse(BaseModel):
     """Response model containing SVG path string"""
     path: str
     source: Dict[str, float]
     target: Dict[str, float]
+
+def calculate_straight_path(source_x: float, source_y: float, target_x: float, target_y: float) -> str:
+    """
+    Calculate straight line path between two points
+    
+    Args:
+        source_x, source_y: Starting point coordinates
+        target_x, target_y: Ending point coordinates
+        
+    Returns:
+        SVG path string for straight line connection
+    """
+    return f"M {source_x},{source_y} L {target_x},{target_y}"
+
 
 def calculate_bezier_path(source_x: float, source_y: float, target_x: float, target_y: float) -> str:
     """
@@ -72,6 +87,23 @@ def calculate_bezier_path(source_x: float, source_y: float, target_x: float, tar
     
     return path
 
+def calculate_edge_path(source_x: float, source_y: float, target_x: float, target_y: float, edge_type: str) -> str:
+    """
+    Calculate edge path based on the specified edge type
+    
+    Args:
+        source_x, source_y: Starting point coordinates
+        target_x, target_y: Ending point coordinates
+        edge_type: Type of edge ('bezier', 'straight', 'smooth', 'steep')
+        
+    Returns:
+        SVG path string for the specified edge type
+    """
+    if edge_type == "straight":
+        return calculate_straight_path(source_x, source_y, target_x, target_y)
+    else:  # Default to bezier
+        return calculate_bezier_path(source_x, source_y, target_x, target_y)
+
 @app.get("/")
 async def root():
     """Health check endpoint"""
@@ -95,12 +127,13 @@ async def get_edge_path(request: EdgePathRequest):
         ]):
             raise HTTPException(status_code=400, detail="Invalid coordinate values")
         
-        # Calculate smooth Bezier path
-        path = calculate_bezier_path(
+        # Calculate path based on edge type
+        path = calculate_edge_path(
             request.source_x,
             request.source_y,
             request.target_x,
-            request.target_y
+            request.target_y,
+            request.edge_type
         )
         
         return EdgePathResponse(

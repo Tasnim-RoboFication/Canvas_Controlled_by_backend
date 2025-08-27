@@ -31,6 +31,9 @@ import CustomNode, { CustomNodeData } from './CustomNode';
 import CustomEdge, { CustomEdgeData } from './CustomEdge';
 import { getEdgePath, checkApiHealth, EdgePathRequest } from '../services/api';
 
+// Edge type options
+export type EdgeType = 'bezier' | 'straight';
+
 // Define node and edge types
 const nodeTypes: NodeTypes = {
   custom: CustomNode,
@@ -65,6 +68,7 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [isApiConnected, setIsApiConnected] = useState(false);
   const [nodeCounter, setNodeCounter] = useState(3);
+  const [selectedEdgeType, setSelectedEdgeType] = useState<EdgeType>('bezier');
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { project } = useReactFlow();
 
@@ -90,7 +94,8 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
     sourceX: number,
     sourceY: number,
     targetX: number,
-    targetY: number
+    targetY: number,
+    edgeType?: EdgeType
   ) => {
     if (!isApiConnected) {
       console.warn('API not connected, using default edge path');
@@ -110,6 +115,7 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
         source_y: sourceY,
         target_x: targetX,
         target_y: targetY,
+        edge_type: edgeType || selectedEdgeType,
       };
 
       const response = await getEdgePath(request);
@@ -138,7 +144,7 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
           : edge
       ));
     }
-  }, [isApiConnected, setEdges]);
+  }, [isApiConnected, setEdges, selectedEdgeType]);
 
   /**
    * Handle new edge connections
@@ -185,10 +191,11 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
         sourceNode.position.x + 60,
         sourceY,
         targetNode.position.x + 60,
-        targetY
+        targetY,
+        selectedEdgeType
       );
     }
-  }, [nodes, setEdges, updateEdgeWithBackendPath]);
+  }, [nodes, setEdges, updateEdgeWithBackendPath, selectedEdgeType]);
 
   /**
    * Handle node position changes - update connected edges
@@ -231,13 +238,14 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
               sourceNode.position.x + 60,
               sourceY,
               targetNode.position.x + 60,
-              targetY
+              targetY,
+              selectedEdgeType
             );
           }
         });
       });
     }
-  }, [onNodesChange, edges, nodes, updateEdgeWithBackendPath]);
+  }, [onNodesChange, edges, nodes, updateEdgeWithBackendPath, selectedEdgeType]);
 
   /**
    * Add a new node to the canvas
@@ -301,6 +309,18 @@ const CanvasFlow: React.FC<CanvasFlowProps> = () => {
         <button onClick={addNode}>Add Node</button>
         <button onClick={resetCanvas}>Reset</button>
         <button onClick={clearCanvas}>Clear All</button>
+        
+        <div className="edge-type-selector">
+          <h4>Edge Type</h4>
+          <select 
+            value={selectedEdgeType} 
+            onChange={(e) => setSelectedEdgeType(e.target.value as EdgeType)}
+            className="edge-type-dropdown"
+          >
+            <option value="bezier">Bezier (Curved)</option>
+            <option value="straight">Straight Line</option>
+          </select>
+        </div>
       </div>
 
       {/* Status Indicator */}

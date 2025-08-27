@@ -20,6 +20,7 @@ export interface EdgePathRequest {
   source_y: number;
   target_x: number;
   target_y: number;
+  edge_type?: 'bezier' | 'straight' ;
 }
 
 export interface EdgePathResponse {
