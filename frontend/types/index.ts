@@ -4,6 +4,9 @@
 
 import { Node, Edge } from 'reactflow';
 
+// Define EdgeType first, before using it in interfaces
+export type EdgeType = 'bezier' | 'straight' | 'step' | 'smoothstep';
+
 export interface CustomNodeData {
   label: string;
   onAnchorMouseDown?: (event: React.MouseEvent, position: 'top' | 'bottom') => void;
@@ -12,15 +15,13 @@ export interface CustomNodeData {
 export interface CustomEdgeData {
   svgPath?: string;
   isLoading?: boolean;
-  edgeType: EdgeType; // Add this to store the edge's original type
+  edgeType: EdgeType; // Now EdgeType is defined above
 }
 
 export type CustomNode = Node<CustomNodeData>;
 export type CustomEdge = Edge<CustomEdgeData>;
 
-// Centralized API types
-export type EdgeType = 'bezier' | 'straight' | 'step' | 'smoothstep';
-
+// API types
 export interface EdgePathRequest {
   source_x: number;
   source_y: number;
